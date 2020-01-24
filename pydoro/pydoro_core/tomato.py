@@ -219,6 +219,10 @@ class InitialState:
         self._remainder = max(self._remainder - (cur - self._started_at), 0)
         self._started_at = cur
 
+    def __hash__(self) -> int:
+        self._calc_remainder()
+        return self._remainder
+
 
 class IntermediateState(InitialState):
     name = "waiting"
@@ -427,6 +431,13 @@ class Tomato:
         self.no_sound = False
         self.emoji = False
         self.tomatoes = 0
+        self.previous_state_hash = -1
+
+    def invalidated(self):
+        new_hash = self._state.__hash__()
+        result = self.previous_state_hash != new_hash
+        self.previous_state_hash = new_hash
+        return result
 
     def start(self):
         self._state = self._state.start()

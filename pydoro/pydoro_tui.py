@@ -84,8 +84,9 @@ application = Application(layout=layout, key_bindings=kb, style=style, full_scre
 
 def draw():
     tomato.update()
-    text_area.text = tomato.as_formatted_text()
-    application.invalidate()
+    if tomato.invalidated():
+        text_area.text = tomato.as_formatted_text()
+        application.invalidate()
 
 
 def main():
